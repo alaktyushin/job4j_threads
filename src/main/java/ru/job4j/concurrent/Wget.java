@@ -15,9 +15,5 @@ public class Wget {
                 }
         );
         thread.start();
-        System.out.println("Main");
-        while (thread.getState() != Thread.State.TERMINATED) {
-        }
-        System.out.println("\rLoaded");
     }
 }
