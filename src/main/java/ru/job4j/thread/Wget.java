@@ -2,66 +2,57 @@ package ru.job4j.thread;
 
 import java.io.*;
 import java.net.URL;
+import java.nio.file.Path;
+import java.time.Duration;
+import java.time.Instant;
 
 public class Wget implements Runnable {
     private final String url;
     private final int speed;
 
-    public Wget(String url, int speed) {
+    public Wget(final String url, final int speed) {
         this.url = url;
         this.speed = speed;
     }
 
     @Override
     public void run() {
-        double estimatedSpeed = getSpeed(url);
-        long timeout = (estimatedSpeed < speed) ? 0 : Math.round(estimatedSpeed / speed * 1000);
         try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
-            FileOutputStream fileOutputStream = new FileOutputStream("pom_tmp.xml")) {
-            byte[] dataBuffer = new byte[1024];
+             FileOutputStream fileOutputStream =
+                     new FileOutputStream("./data/" + Path.of(url).getFileName())) {
+            byte[] dataBuffer = new byte[512];
             int bytesRead;
-            while ((bytesRead = in.read(dataBuffer, 0, 1024)) != -1) {
+            int bytesDownloaded = 0;
+            int downloadSum = 0;
+            Instant start = Instant.now();
+            Instant downloadStart = Instant.now();
+            System.out.println("Download started: " + start);
+            while ((bytesRead = in.read(dataBuffer, 0, 512)) != -1) {
+                bytesDownloaded += bytesRead;
+                downloadSum += bytesRead;
+                if (bytesDownloaded >= speed) {
+                    Thread.sleep(1000 - Duration.between(start, Instant.now()).toMillis());
+                    bytesDownloaded = 0;
+                    start = Instant.now();
+                }
+                System.out.print("\rBytes downloaded: " + downloadSum);
                 fileOutputStream.write(dataBuffer, 0, bytesRead);
-                System.out.println("Timeout, millis: " + timeout);
-                Thread.sleep(timeout);
             }
+            System.out.println("\rDownload finished: " + Instant.now());
+            System.out.println("Duration in seconds: " + Duration.between(downloadStart, Instant.now()).getSeconds());
+            System.out.println("Total bytes downloaded: " + downloadSum);
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
 
-    private double getSpeed(String url) {
-        BufferedInputStream in;
-        try {
-            in = new BufferedInputStream(new URL(url).openStream());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        byte[] dataBuffer = new byte[1024];
-        int bytesRead;
-        int blocksCount = 0;
-        int bytesCount = 0;
-        while (true) {
-            try {
-                bytesRead = in.read(dataBuffer, 0, 1024);
-                if (!(bytesRead != -1 && blocksCount < 100)) {
-                    break;
-                }
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            blocksCount++;
-            bytesCount += bytesRead;
-        }
-        System.out.println("Estimated speed: " + bytesCount / blocksCount + " B/s");
-        return bytesCount / blocksCount;
-    }
-
     public static void main(String[] args) throws InterruptedException {
-        String url = args[0];
-        int speed = Integer.parseInt(args[1]);
+        ArgsName argsName = ArgsName.of(args);
+        String url = argsName.get("url");
+        int speed = Integer.parseInt(argsName.get("speed"));
         System.out.println("Given URL: " + url);
         System.out.println("Given speed: " + speed + " B/s");
+        System.out.println("File will be saved as: ./data/" + Path.of(url).getFileName());
         Thread wget = new Thread(new Wget(url, speed));
         wget.start();
         wget.join();
