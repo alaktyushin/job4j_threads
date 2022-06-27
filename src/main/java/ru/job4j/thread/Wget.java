@@ -8,9 +8,9 @@ import java.time.Instant;
 
 public class Wget implements Runnable {
     private final String url;
-    private final int speed;
+    private final long speed;
 
-    public Wget(final String url, final int speed) {
+    public Wget(final String url, final long speed) {
         this.url = url;
         this.speed = speed;
     }
@@ -23,7 +23,7 @@ public class Wget implements Runnable {
             byte[] dataBuffer = new byte[512];
             int bytesRead;
             int bytesDownloaded = 0;
-            int downloadSum = 0;
+            long downloadSum = 0;
             Instant start = Instant.now();
             Instant downloadStart = Instant.now();
             System.out.println("Download started: " + start);
@@ -31,7 +31,10 @@ public class Wget implements Runnable {
                 bytesDownloaded += bytesRead;
                 downloadSum += bytesRead;
                 if (bytesDownloaded >= speed) {
-                    Thread.sleep(1000 - Duration.between(start, Instant.now()).toMillis());
+                    long duration = Duration.between(start, Instant.now()).toMillis();
+                    if (duration < 1000) {
+                        Thread.sleep(1000 - duration);
+                    }
                     bytesDownloaded = 0;
                     start = Instant.now();
                 }
