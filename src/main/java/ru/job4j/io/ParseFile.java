@@ -7,7 +7,7 @@ public final class ParseFile {
 
     private final File file;
 
-    ParseFile(final File file) {
+    private ParseFile(final File file) {
         this.file = file;
     }
 
