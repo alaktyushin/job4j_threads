@@ -5,7 +5,7 @@ import java.io.*;
 public final class SaveToFile {
     private final File file;
 
-    public SaveToFile(final File file) {
+     SaveToFile(final File file) {
         this.file = file;
     }
 
