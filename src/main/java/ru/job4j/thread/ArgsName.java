@@ -15,7 +15,7 @@ final public class ArgsName {
         if (args.length < 2) {
             throw new IllegalArgumentException("Missing arguments. At least there must be -url=FileURL -speed=SPEED");
         }
-        for (var a : args) {
+        for (String a : args) {
             if (!a.startsWith("-") || a.split("=").length < 2) {
                 throw new IllegalArgumentException("Incorrect argument(s) format: must be -ARG=VALUE");
             }
