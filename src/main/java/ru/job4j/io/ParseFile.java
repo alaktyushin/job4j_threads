@@ -15,7 +15,7 @@ public final class ParseFile {
         try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file))) {
         StringBuilder output = new StringBuilder();
         int data;
-        while ((data = bufferedInputStream.read()) > 0) {
+        while ((data = bufferedInputStream.read()) != -1) {
             if (filter.test((char) data)) {
                 output.append((char) data);
             }
