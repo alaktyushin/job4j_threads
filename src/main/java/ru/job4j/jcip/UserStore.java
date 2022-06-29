@@ -3,55 +3,47 @@ package ru.job4j.jcip;
 import net.jcip.annotations.GuardedBy;
 import net.jcip.annotations.ThreadSafe;
 
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ThreadSafe
 public class UserStore {
 
     @GuardedBy("this")
-    private final HashSet<User> userStore = new HashSet<>();
+    private final ConcurrentHashMap<Integer, Integer> userStore = new ConcurrentHashMap<>();
 
-    private synchronized boolean add(User user) {
-        return userStore.add(user);
+    private synchronized boolean manageUser(final User user, final boolean pred1, final boolean pred2) {
+        if (pred1) {
+            return false;
+        }
+        if (pred2) {
+            userStore.put(user.getId(), user.getAmount());
+        } else {
+            userStore.remove(user.getId());
+        }
+        return true;
     }
 
-    private synchronized boolean update(User user) {
-        boolean result = false;
-        if (userStore.contains(user)) {
-            userStore.remove(user);
-            userStore.add(user);
-            result = true;
-        }
-        return result;
+    synchronized boolean add(final User user) {
+        return manageUser(user, userStore.containsKey(user.getId()), true);
     }
 
-    private synchronized boolean delete(User user) {
-        return userStore.remove(user);
+    synchronized boolean update(final User user) {
+        return manageUser(user, !userStore.containsKey(user.getId()), true);
     }
 
-    private synchronized boolean transfer(int fromId, int toId, int amount) {
-        boolean result = false;
-        boolean res1 = false;
-        boolean res2 = false;
-        User u1 = null;
-        User u2 = null;
-        for (var i : userStore) {
-            if (i.getId() == fromId) {
-                u1 = new User(fromId, i.getAmount() - amount);
-                res1 = true;
-            }
-            if (i.getId() == toId) {
-                u2 = new User(toId, i.getAmount() + amount);
-                res2 = true;
-            }
-            result = res1 && res2;
+    synchronized boolean delete(final User user) {
+        return manageUser(user, !userStore.containsKey(user.getId()), false);
+    }
+
+    synchronized boolean transfer(final int fromId, final int toId, final int amount) {
+        if (!userStore.containsKey(fromId)
+                || !userStore.containsKey(toId)
+                || (userStore.get(fromId) < amount)) {
+            return false;
         }
-        if (result) {
-            userStore.remove(u1);
-            userStore.add(u1);
-            userStore.remove(u2);
-            userStore.add(u2);
-        }
-        return result;
+        userStore.put(fromId, userStore.get(fromId) - amount);
+        userStore.put(toId, userStore.get(toId) + amount);
+        return true;
     }
 }
+
