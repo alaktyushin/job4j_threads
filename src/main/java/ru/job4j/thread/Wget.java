@@ -3,6 +3,7 @@ package ru.job4j.thread;
 import java.io.*;
 import java.net.URL;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.Instant;
 
@@ -19,7 +20,7 @@ public class Wget implements Runnable {
     public void run() {
         try (BufferedInputStream in = new BufferedInputStream(new URL(url).openStream());
              FileOutputStream fileOutputStream =
-                     new FileOutputStream("./data/" + Path.of(url).getFileName())) {
+                     new FileOutputStream("./data/" + Paths.get(url).getFileName())) {
             byte[] dataBuffer = new byte[512];
             int bytesRead;
             int bytesDownloaded = 0;
@@ -55,7 +56,7 @@ public class Wget implements Runnable {
         int speed = Integer.parseInt(argsName.get("speed"));
         System.out.println("Given URL: " + url);
         System.out.println("Given speed: " + speed + " B/s");
-        System.out.println("File will be saved as: ./data/" + Path.of(url).getFileName());
+        System.out.println("File will be saved as: ./data/" + Paths.get(url).getFileName());
         Thread wget = new Thread(new Wget(url, speed));
         wget.start();
         wget.join();
