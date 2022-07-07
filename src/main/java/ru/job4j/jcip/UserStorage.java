@@ -10,14 +10,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class UserStorage {
 
     @GuardedBy("this")
-    private final ConcurrentHashMap<Integer, Integer> userStorage = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Integer, User> userStorage = new ConcurrentHashMap<>();
 
-    boolean add(final User user) {
-        return userStorage.putIfAbsent(user.getId(), user.getAmount()) == null;
+    synchronized boolean add(final User user) {
+        return userStorage.putIfAbsent(user.getId(), user) == null;
     }
 
     synchronized boolean update(final User user) {
-        return userStorage.replace(user.getId(), user.getAmount()) != null;
+        return userStorage.replace(user.getId(), user) != null;
     }
 
     synchronized boolean delete(final User user) {
@@ -25,14 +25,16 @@ public class UserStorage {
     }
 
     synchronized boolean transfer(final int fromId, final int toId, final int amount) {
+        User userFrom = userStorage.get(fromId);
+        User userTo = userStorage.get(toId);
         if (fromId == toId
-                || (userStorage.get(toId) == null)
-                || (userStorage.get(fromId) == null)
-                || (userStorage.get(fromId) < amount)) {
+                || userFrom == null
+                || userTo == null
+                || userFrom.getAmount() < amount) {
             return false;
         }
-        userStorage.replace(fromId, userStorage.get(fromId) - amount);
-        userStorage.replace(toId, userStorage.get(toId) + amount);
+        update(new User(fromId, userFrom.getAmount() - amount));
+        update(new User(toId, userTo.getAmount() + amount));
         return true;
     }
 

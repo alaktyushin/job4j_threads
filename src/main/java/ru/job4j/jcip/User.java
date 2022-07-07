@@ -36,4 +36,12 @@ public class User {
     public int getAmount() {
         return amount;
     }
+
+    @Override
+    public String toString() {
+        return "User{"
+                + "id=" + id
+                + ", amount=" + amount
+                + '}';
+    }
 }
