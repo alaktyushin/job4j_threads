@@ -6,9 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SingleLockListTest {
 
@@ -24,6 +23,6 @@ public class SingleLockListTest {
         second.join();
         Set<Integer> rsl = new TreeSet<>();
         list.iterator().forEachRemaining(rsl::add);
-        //assertThat(rsl, is(Set.of(1, 2)));
+        assertThat(rsl, is(Set.of(1, 2)));
     }
 }
