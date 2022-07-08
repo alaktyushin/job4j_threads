@@ -1,7 +1,6 @@
 package ru.job4j.monitor;
 
 public class CountBarrier {
-
     private final Object monitor = this;
 
     private final int total;
@@ -14,17 +13,8 @@ public class CountBarrier {
 
     public void count() {
         synchronized (monitor) {
-            while (count < total) {
-                try {
-                    Thread.sleep(100);
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-                count++;
-                System.out.print("\rcount: " + count);
-            }
+            count++;
             monitor.notifyAll();
-            System.out.println();
         }
     }
 
@@ -33,7 +23,6 @@ public class CountBarrier {
             while (count < total) {
                 try {
                     monitor.wait();
-                    System.out.println("waiting");
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
@@ -42,22 +31,33 @@ public class CountBarrier {
     }
 
     public static void main(String[] args) {
-        CountBarrier barrier = new CountBarrier(100);
+        final int TOTAL = 100;
+        CountBarrier countBarrier = new CountBarrier(TOTAL);
         Thread master = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    barrier.await();
+                    countBarrier.count();
                 },
                 "Master"
         );
         Thread slave = new Thread(
                 () -> {
-                    barrier.count();
+                    countBarrier.await();
                     System.out.println(Thread.currentThread().getName() + " started");
                 },
                 "Slave"
         );
         master.start();
+        while (countBarrier.count < TOTAL) {
+            countBarrier.count++;
+            System.out.print("\rcount: " + countBarrier.count);
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        System.out.println();
         slave.start();
     }
 }
