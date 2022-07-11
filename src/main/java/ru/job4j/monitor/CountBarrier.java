@@ -30,7 +30,7 @@ public class CountBarrier {
         }
     }
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         final int TOTAL = 100;
         CountBarrier countBarrier = new CountBarrier(TOTAL);
         Thread master = new Thread(
