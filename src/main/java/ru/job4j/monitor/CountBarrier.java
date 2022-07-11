@@ -30,7 +30,7 @@ public class CountBarrier {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         final int TOTAL = 100;
         CountBarrier countBarrier = new CountBarrier(TOTAL);
         Thread master = new Thread(
@@ -42,12 +42,12 @@ public class CountBarrier {
         );
         Thread slave = new Thread(
                 () -> {
-                    countBarrier.await();
                     System.out.println(Thread.currentThread().getName() + " started");
+                    countBarrier.await();
                 },
                 "Slave"
         );
-        master.start();
+        slave.start();
         while (countBarrier.count < TOTAL) {
             countBarrier.count++;
             System.out.print("\rcount: " + countBarrier.count);
@@ -58,6 +58,6 @@ public class CountBarrier {
             }
         }
         System.out.println();
-        slave.start();
+        master.start();
     }
 }
