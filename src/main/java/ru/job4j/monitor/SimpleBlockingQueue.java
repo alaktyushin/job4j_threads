@@ -34,8 +34,13 @@ public class SimpleBlockingQueue<T> {
                 System.out.println("Waiting for poll");
                 this.wait();
             }
+            T polledValue = queue.poll();
             this.notifyAll();
-            return queue.poll();
+            return polledValue;
         }
+    }
+
+    public synchronized boolean isEmpty() {
+        return queue.size() == 0;
     }
 }

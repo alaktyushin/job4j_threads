@@ -12,9 +12,9 @@ public class SimpleBlockingQueueTest {
 
     @Test
     public void whenQueueIsNotBlocked() throws InterruptedException {
-        SimpleBlockingQueue queue = new SimpleBlockingQueue(2);
-        List list = new LinkedList();
-        List expected = List.of(15, 28);
+        final SimpleBlockingQueue queue = new SimpleBlockingQueue(2);
+        final List list = new LinkedList();
+        final List expected = List.of(15, 28);
         Thread producerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
@@ -80,9 +80,9 @@ public class SimpleBlockingQueueTest {
 
     @Test
     public void whenQueueBlockedByConsumer() throws InterruptedException {
-        SimpleBlockingQueue queue = new SimpleBlockingQueue(1);
-        List list = new LinkedList();
-        List expected = List.of(15, 28);
+        final SimpleBlockingQueue queue = new SimpleBlockingQueue(1);
+        final List list = new LinkedList();
+        final List expected = List.of(15);
         Thread producerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
@@ -140,10 +140,8 @@ public class SimpleBlockingQueueTest {
         consumerThread1.start();
         consumerThread1.join();
         consumerThread2.start();
-        /*
-        If uncommented - then the queue is blocked:
+        consumerThread2.interrupt();
         consumerThread2.join();
-        */
         producerThread2.start();
         producerThread2.join();
         assertThat(list.toString(), is(expected.toString()));
@@ -151,9 +149,9 @@ public class SimpleBlockingQueueTest {
 
     @Test
     public void whenRestrictedSizeQueueBlockedByProducer() throws InterruptedException {
-        SimpleBlockingQueue queue = new SimpleBlockingQueue(2);
-        List list = new LinkedList();
-        List expected = List.of(1, 2);
+        final SimpleBlockingQueue queue = new SimpleBlockingQueue(2);
+        final List list = new LinkedList();
+        final List expected = List.of(1, 2);
         Thread producerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
@@ -211,10 +209,8 @@ public class SimpleBlockingQueueTest {
         producerThread1.start();
         producerThread1.join();
         producerThread2.start();
-        /*
-        If uncommented - then the queue is blocked:
+        producerThread2.interrupt();
         producerThread2.join();
-        */
         consumerThread1.start();
         consumerThread1.join();
         consumerThread2.start();
