@@ -27,8 +27,8 @@ public class SimpleBlockingQueue<T> {
                     throw new RuntimeException(e);
                 }
             }
-            this.notifyAll();
             queue.offer(value);
+            this.notifyAll();
         }
     }
 
