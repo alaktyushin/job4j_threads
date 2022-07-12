@@ -5,47 +5,45 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
 
 @ThreadSafe
 public class SimpleBlockingQueue<T> {
 
     @GuardedBy("this")
-    private final Queue<T> queue;
+    private final Queue<T> queue = new LinkedList<>();
+    private final int queueSize;
 
-    public SimpleBlockingQueue() {
-        queue = new LinkedList<>();
-    }
-
-    public SimpleBlockingQueue(int queueSize) {
-        queue = new ArrayBlockingQueue<>(queueSize);
+    public SimpleBlockingQueue(final int queueSize) {
+        this.queueSize = queueSize;
     }
 
     public void offer(T value) {
         synchronized (this) {
-            while (!queue.offer(value)) {
+            while (queue.size() >= queueSize) {
                 try {
+                    System.out.println("Waiting for offer");
                     this.wait();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
             this.notifyAll();
+            queue.offer(value);
         }
     }
 
     public T poll() {
         synchronized (this) {
-            T result = queue.poll();
-            while (result == null) {
+            while (queue.size() == 0) {
                 try {
+                    System.out.println("Waiting for poll");
                     this.wait();
                 } catch (InterruptedException e) {
                     throw new RuntimeException(e);
                 }
             }
             this.notifyAll();
-            return result;
+            return queue.poll();
         }
     }
 }

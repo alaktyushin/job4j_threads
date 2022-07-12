@@ -12,13 +12,14 @@ public class SimpleBlockingQueueTest {
 
     @Test
     public void whenQueueIsNotBlocked() throws InterruptedException {
-        SimpleBlockingQueue queue = new SimpleBlockingQueue();
+        SimpleBlockingQueue queue = new SimpleBlockingQueue(2);
         List list = new LinkedList();
         List expected = List.of(15, 28);
         Thread producerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
                     queue.offer(15);
+                    System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-1"
         );
@@ -26,22 +27,25 @@ public class SimpleBlockingQueueTest {
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
                     queue.offer(28);
+                    System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-2"
         );
         Thread consumerThread1 = new Thread(
                 () -> {
+                    System.out.println(Thread.currentThread().getName() + " started");
                     Object polledValue = queue.poll();
                     list.add(polledValue);
-                    System.out.println(Thread.currentThread().getName() + " started. Polled value: " + polledValue);
+                    System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
                 "Consumer-1"
         );
         Thread consumerThread2 = new Thread(
                 () -> {
+                    System.out.println(Thread.currentThread().getName() + " started");
                     Object polledValue = queue.poll();
                     list.add(polledValue);
-                    System.out.println(Thread.currentThread().getName() + " started. Polled value: " + polledValue);
+                    System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
                 "Consumer-2"
         );
@@ -58,13 +62,14 @@ public class SimpleBlockingQueueTest {
 
     @Test
     public void whenQueueBlockedByConsumer() throws InterruptedException {
-        SimpleBlockingQueue queue = new SimpleBlockingQueue();
+        SimpleBlockingQueue queue = new SimpleBlockingQueue(1);
         List list = new LinkedList();
-        List expected = List.of(15);
+        List expected = List.of(15, 28);
         Thread producerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
                     queue.offer(15);
+                    System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-1"
         );
@@ -72,22 +77,25 @@ public class SimpleBlockingQueueTest {
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
                     queue.offer(28);
+                    System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-2"
         );
         Thread consumerThread1 = new Thread(
                 () -> {
+                    System.out.println(Thread.currentThread().getName() + " started");
                     Object polledValue = queue.poll();
                     list.add(polledValue);
-                    System.out.println(Thread.currentThread().getName() + " started. Polled value: " + polledValue);
+                    System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
                 "Consumer-1"
         );
         Thread consumerThread2 = new Thread(
                 () -> {
+                    System.out.println(Thread.currentThread().getName() + " started");
                     Object polledValue = queue.poll();
                     list.add(polledValue);
-                    System.out.println(Thread.currentThread().getName() + " started. Polled value: " + polledValue);
+                    System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
                 "Consumer-2"
         );
@@ -115,6 +123,7 @@ public class SimpleBlockingQueueTest {
                     System.out.println(Thread.currentThread().getName() + " started");
                     for (int i = 1; i <= 2; i++) {
                         queue.offer(i);
+                        System.out.println(Thread.currentThread().getName() + " offered");
                     }
                 },
                 "Producer-1"
@@ -123,22 +132,25 @@ public class SimpleBlockingQueueTest {
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
                     queue.offer(28);
+                    System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-2"
         );
         Thread consumerThread1 = new Thread(
                 () -> {
+                    System.out.println(Thread.currentThread().getName() + " started");
                     Object polledValue = queue.poll();
                     list.add(polledValue);
-                    System.out.println(Thread.currentThread().getName() + " started. Polled value: " + polledValue);
+                    System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
                 "Consumer-1"
         );
         Thread consumerThread2 = new Thread(
                 () -> {
+                    System.out.println(Thread.currentThread().getName() + " started");
                     Object polledValue = queue.poll();
                     list.add(polledValue);
-                    System.out.println(Thread.currentThread().getName() + " started. Polled value: " + polledValue);
+                    System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
                 "Consumer-2"
         );
