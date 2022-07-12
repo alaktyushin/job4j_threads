@@ -18,7 +18,11 @@ public class SimpleBlockingQueueTest {
         Thread producerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    queue.offer(15);
+                    try {
+                        queue.offer(15);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-1"
@@ -26,7 +30,11 @@ public class SimpleBlockingQueueTest {
         Thread producerThread2 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    queue.offer(28);
+                    try {
+                        queue.offer(28);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-2"
@@ -34,7 +42,12 @@ public class SimpleBlockingQueueTest {
         Thread consumerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    Object polledValue = queue.poll();
+                    Object polledValue = null;
+                    try {
+                        polledValue = queue.poll();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     list.add(polledValue);
                     System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
@@ -43,7 +56,12 @@ public class SimpleBlockingQueueTest {
         Thread consumerThread2 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    Object polledValue = queue.poll();
+                    Object polledValue = null;
+                    try {
+                        polledValue = queue.poll();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     list.add(polledValue);
                     System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
@@ -68,7 +86,11 @@ public class SimpleBlockingQueueTest {
         Thread producerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    queue.offer(15);
+                    try {
+                        queue.offer(15);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-1"
@@ -76,7 +98,11 @@ public class SimpleBlockingQueueTest {
         Thread producerThread2 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    queue.offer(28);
+                    try {
+                        queue.offer(28);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-2"
@@ -84,7 +110,12 @@ public class SimpleBlockingQueueTest {
         Thread consumerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    Object polledValue = queue.poll();
+                    Object polledValue = null;
+                    try {
+                        polledValue = queue.poll();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     list.add(polledValue);
                     System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
@@ -93,7 +124,12 @@ public class SimpleBlockingQueueTest {
         Thread consumerThread2 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    Object polledValue = queue.poll();
+                    Object polledValue = null;
+                    try {
+                        polledValue = queue.poll();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     list.add(polledValue);
                     System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
@@ -122,7 +158,11 @@ public class SimpleBlockingQueueTest {
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
                     for (int i = 1; i <= 2; i++) {
-                        queue.offer(i);
+                        try {
+                            queue.offer(i);
+                        } catch (InterruptedException e) {
+                            throw new RuntimeException(e);
+                        }
                         System.out.println(Thread.currentThread().getName() + " offered");
                     }
                 },
@@ -131,7 +171,11 @@ public class SimpleBlockingQueueTest {
         Thread producerThread2 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    queue.offer(28);
+                    try {
+                        queue.offer(28);
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     System.out.println(Thread.currentThread().getName() + " offered");
                 },
                 "Producer-2"
@@ -139,7 +183,12 @@ public class SimpleBlockingQueueTest {
         Thread consumerThread1 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    Object polledValue = queue.poll();
+                    Object polledValue = null;
+                    try {
+                        polledValue = queue.poll();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     list.add(polledValue);
                     System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
@@ -148,7 +197,12 @@ public class SimpleBlockingQueueTest {
         Thread consumerThread2 = new Thread(
                 () -> {
                     System.out.println(Thread.currentThread().getName() + " started");
-                    Object polledValue = queue.poll();
+                    Object polledValue = null;
+                    try {
+                        polledValue = queue.poll();
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
                     list.add(polledValue);
                     System.out.println(Thread.currentThread().getName() + " polled value: " + polledValue);
                 },
