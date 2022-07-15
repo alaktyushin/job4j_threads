@@ -14,7 +14,7 @@ public class ParallelSearch {
                             System.out.println(queue.poll());
                         } catch (InterruptedException e) {
                             System.out.println("Consumer stopped by exception: " + e);
-                            break;
+                            Thread.currentThread().interrupt();
                         }
                     }
                 }
