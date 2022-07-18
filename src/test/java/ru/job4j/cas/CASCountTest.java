@@ -16,6 +16,20 @@ public class CASCountTest {
     }
 
     @Test
+    public void whenGetWithDefaultValue() {
+        CASCount count = new CASCount(2);
+        count.increment();
+        assertEquals(count.get(), 3);
+    }
+
+    @Test
+    public void whenGetWithDefaultNegativeValue() {
+        CASCount count = new CASCount(-2);
+        count.increment();
+        assertEquals(count.get(), -1);
+    }
+
+    @Test
     public void whenIncrement() {
         CASCount count = new CASCount();
         List<Integer> list = new ArrayList<>();
