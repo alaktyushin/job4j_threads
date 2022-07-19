@@ -7,31 +7,31 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-public class CASCountTest {
+public class CASCountAtomicIntegerTest {
 
     @Test
     public void whenGetFromEmpty() {
-        CASCount count = new CASCount();
+        CASCountAtomicInteger count = new CASCountAtomicInteger();
         assertEquals(count.get(), 0);
     }
 
     @Test
     public void whenGetWithDefaultValue() {
-        CASCount count = new CASCount(2);
+        CASCountAtomicInteger count = new CASCountAtomicInteger(2);
         count.increment();
         assertEquals(count.get(), 3);
     }
 
     @Test
     public void whenGetWithDefaultNegativeValue() {
-        CASCount count = new CASCount(-2);
+        CASCountAtomicInteger count = new CASCountAtomicInteger(-2);
         count.increment();
         assertEquals(count.get(), -1);
     }
 
     @Test
     public void whenIncrement() {
-        CASCount count = new CASCount();
+        CASCountAtomicInteger count = new CASCountAtomicInteger();
         List<Integer> list = new ArrayList<>();
         List<Integer> expected = List.of(0, 1, 2, 3);
         list.add(count.get());
@@ -46,7 +46,7 @@ public class CASCountTest {
 
     @Test
     public void whenIncrement300Times() {
-        CASCount count = new CASCount(-150);
+        CASCountAtomicInteger count = new CASCountAtomicInteger(-150);
         List<Integer> list = new ArrayList<>();
         List<Integer> expected = new ArrayList<>();
         for (int i = -150; i < 150; i++) {
